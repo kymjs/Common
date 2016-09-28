@@ -1,5 +1,8 @@
 package com.kymjs.common;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -9,6 +12,22 @@ import java.util.Locale;
  */
 public class DateUtils {
 
+    /**
+     * 指定格式返回当前系统时间
+     */
+    public static String getDataTime(String format) {
+        SimpleDateFormat df = new SimpleDateFormat(format, Locale.getDefault());
+        return df.format(new Date());
+    }
+
+    /**
+     * 返回当前系统时间(格式以HH:mm形式)
+     */
+    public static String getDataTime() {
+        return getDataTime("HH:mm");
+    }
+
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static boolean isToday(long when) {
         android.text.format.Time time = new android.text.format.Time();
         time.set(when);

@@ -1,4 +1,5 @@
-[![kymjs](http://www.kymjs.com/image/logo_s.png)](http://www.kymjs.com/works/)   
+[![kymjs](http://http://oe3r1xqa7.bkt.clouddn.com/image/logo_s.png)](http://www.kymjs.com/works/)   
+*.apk
 
 *CoreModule* 自备自用的 module
 

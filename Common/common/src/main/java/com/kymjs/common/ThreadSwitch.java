@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ThreadSwitch extends Thread {
 
-    private final BlockingQueue<Runnable> mPoolWorkQueue = new LinkedBlockingQueue<>(8);
+    private final BlockingQueue<Runnable> mPoolWorkQueue = new LinkedBlockingQueue<>(200);
     private Handler handler = new Handler(Looper.getMainLooper());
 
     private static class Holder {
