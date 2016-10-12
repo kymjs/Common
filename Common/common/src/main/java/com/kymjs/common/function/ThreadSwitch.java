@@ -1,4 +1,4 @@
-package com.kymjs.common;
+package com.kymjs.common.function;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -12,12 +12,13 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by ZhangTao on 9/1/16.
  */
 public class ThreadSwitch extends Thread {
+    private static final int DEFAULT_SIZE = 8;
 
-    private final BlockingQueue<Runnable> mPoolWorkQueue = new LinkedBlockingQueue<>(200);
+    private final BlockingQueue<Runnable> mPoolWorkQueue;
     private Handler handler = new Handler(Looper.getMainLooper());
 
     private static class Holder {
-        private static final ThreadSwitch INSTANCE = new ThreadSwitch();
+        private static final ThreadSwitch INSTANCE = new ThreadSwitch(200);
     }
 
     public static ThreadSwitch singleton() {
@@ -25,7 +26,11 @@ public class ThreadSwitch extends Thread {
     }
 
     public static ThreadSwitch get() {
-        return new ThreadSwitch();
+        return new ThreadSwitch(DEFAULT_SIZE);
+    }
+
+    public static ThreadSwitch get(int size) {
+        return new ThreadSwitch(size);
     }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -39,8 +44,9 @@ public class ThreadSwitch extends Thread {
     public interface Break extends Runnable {
     }
 
-    private ThreadSwitch() {
+    private ThreadSwitch(int size) {
         this.start();
+        mPoolWorkQueue = new LinkedBlockingQueue<>(size);
     }
 
     public ThreadSwitch io(final IO func) {
