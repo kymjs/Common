@@ -2,7 +2,7 @@ package com.kymjs.simple.common
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.kymjs.common.LogUtils
+import com.kymjs.common.Log
 import com.kymjs.common.function.ThreadSwitch
 
 class MainActivity : AppCompatActivity() {
@@ -13,13 +13,13 @@ class MainActivity : AppCompatActivity() {
 
 
         ThreadSwitch.get().io {
-            LogUtils.d("hello--io")
+            Log.d("hello--io")
         }.ui {
-            LogUtils.d("hello--ui")
+            Log.d("hello--ui")
         }.ui {
-            LogUtils.d("hello2--ui")
+            Log.d("hello2--ui")
         }.breakTask().io {
-            LogUtils.d("hello2-io")
+            Log.d("hello2-io")
         }
     }
 }

@@ -5,17 +5,15 @@ package com.kymjs.common;
 // (powered by Fernflower decompiler)
 //
 
-import android.util.Log;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 /**
  * Created by ZhangTao on 10/12/16.
  */
-public class LogUtils {
+public class Log {
     public static boolean mLogEnable = true;
-    private static String mClassname = LogUtils.class.getName();
+    private static String mClassname = Log.class.getName();
     private static ArrayList<String> mMethods = new ArrayList<>();
 
     public static void setEnable(boolean logEnable) {
@@ -24,35 +22,34 @@ public class LogUtils {
 
     public static void d(String tag, String msg) {
         if (mLogEnable) {
-            Log.d(tag, getMsgWithLineNumber(msg));
+            android.util.Log.d(tag, getMsgWithLineNumber(msg));
         }
-
     }
 
     public static void e(String tag, String msg) {
         if (mLogEnable) {
-            Log.e(tag, getMsgWithLineNumber(msg));
+            android.util.Log.e(tag, getMsgWithLineNumber(msg));
         }
 
     }
 
     public static void i(String tag, String msg) {
         if (mLogEnable) {
-            Log.i(tag, getMsgWithLineNumber(msg));
+            android.util.Log.i(tag, getMsgWithLineNumber(msg));
         }
 
     }
 
     public static void w(String tag, String msg) {
         if (mLogEnable) {
-            Log.w(tag, getMsgWithLineNumber(msg));
+            android.util.Log.w(tag, getMsgWithLineNumber(msg));
         }
 
     }
 
     public static void v(String tag, String msg) {
         if (mLogEnable) {
-            Log.v(tag, getMsgWithLineNumber(msg));
+            android.util.Log.v(tag, getMsgWithLineNumber(msg));
         }
 
     }
@@ -60,7 +57,7 @@ public class LogUtils {
     public static void d(String msg) {
         if (mLogEnable) {
             String[] content = getMsgAndTagWithLineNumber(msg);
-            Log.d(content[0], content[1]);
+            android.util.Log.d(content[0], content[1]);
         }
 
     }
@@ -68,7 +65,7 @@ public class LogUtils {
     public static void e(String msg) {
         if (mLogEnable) {
             String[] content = getMsgAndTagWithLineNumber(msg);
-            Log.e(content[0], content[1]);
+            android.util.Log.e(content[0], content[1]);
         }
 
     }
@@ -76,7 +73,7 @@ public class LogUtils {
     public static void i(String msg) {
         if (mLogEnable) {
             String[] content = getMsgAndTagWithLineNumber(msg);
-            Log.i(content[0], content[1]);
+            android.util.Log.i(content[0], content[1]);
         }
 
     }
@@ -84,7 +81,7 @@ public class LogUtils {
     public static void i() {
         if (mLogEnable) {
             String[] content = getMsgAndTagWithLineNumber("");
-            Log.i(content[0], content[1]);
+            android.util.Log.i(content[0], content[1]);
         }
 
     }
@@ -92,7 +89,7 @@ public class LogUtils {
     public static void w(String msg) {
         if (mLogEnable) {
             String[] content = getMsgAndTagWithLineNumber(msg);
-            Log.w(content[0], content[1]);
+            android.util.Log.w(content[0], content[1]);
         }
 
     }
@@ -100,7 +97,7 @@ public class LogUtils {
     public static void v(String msg) {
         if (mLogEnable) {
             String[] content = getMsgAndTagWithLineNumber(msg);
-            Log.v(content[0], content[1]);
+            android.util.Log.v(content[0], content[1]);
         }
 
     }
@@ -143,7 +140,7 @@ public class LogUtils {
     }
 
     static {
-        Method[] ms = LogUtils.class.getDeclaredMethods();
+        Method[] ms = Log.class.getDeclaredMethods();
         for (Method m : ms) {
             mMethods.add(m.getName());
         }

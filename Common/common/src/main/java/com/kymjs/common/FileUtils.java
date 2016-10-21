@@ -6,6 +6,7 @@ import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import java.io.Closeable;
@@ -19,6 +20,14 @@ import java.nio.channels.FileChannel;
  * Created by ZhangTao on 9/1/16.
  */
 public class FileUtils {
+
+    public static boolean hsveSDCard() {
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+    }
+
+    public static File sdCard() {
+        return Environment.getExternalStorageDirectory();
+    }
 
     /**
      * 把uri转为File对象
