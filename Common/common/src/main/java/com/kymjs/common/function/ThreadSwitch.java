@@ -15,7 +15,7 @@ public class ThreadSwitch extends Thread {
     private static final int DEFAULT_SIZE = 8;
 
     private final BlockingQueue<Runnable> mPoolWorkQueue;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private static Handler handler = new Handler(Looper.getMainLooper());
 
     private static class Holder {
         private static final ThreadSwitch INSTANCE = new ThreadSwitch(200);
@@ -81,7 +81,10 @@ public class ThreadSwitch extends Thread {
                     } else if (task instanceof Function) {
                         handler.post(task);
                     } else if (task instanceof Break) {
-                        return;
+                        mPoolWorkQueue.clear();
+                        if (this != Holder.INSTANCE) {
+                            return;
+                        }
                     }
                 }
             } catch (InterruptedException e) {
