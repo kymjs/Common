@@ -21,16 +21,34 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
 
+import com.kymjs.common.Log;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
+
 
 /**
  * 线程切换工具类
  * Created by ZhangTao on 9/1/16.
  */
+
+
+/**
+ * 只在API 21以上时才出问题, 也就是使用 LinkedTransferQueue 队列时会出问题
+ * <p>
+ * run方法中,如果调用了mPoolWorkQueue.clear();后马上调用mPoolWorkQueue.take();
+ * 很大程度上会抛空指针异常说 mPoolWorkQueue 为空
+ * <p>
+ * 但是如果在clear()方法之后,随便打印一条log
+ * 再调用mPoolWorkQueue.take();
+ * 抛空指针异常的概率会大大下降。
+ * <p>
+ * 空指针不是必现的
+ */
 public class ThreadSwitch extends Thread {
     private static final int DEFAULT_SIZE = 8;
+    volatile private boolean isBreak = false;
 
     private final BlockingQueue<Runnable> mPoolWorkQueue;
     private static Handler handler = new Handler(Looper.getMainLooper());
@@ -59,9 +77,6 @@ public class ThreadSwitch extends Thread {
     public interface IO extends Runnable {
     }
 
-    public interface Break extends Runnable {
-    }
-
     private ThreadSwitch(int size) {
         this.start();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -82,11 +97,7 @@ public class ThreadSwitch extends Thread {
     }
 
     public ThreadSwitch breakTask() {
-        mPoolWorkQueue.add(new Break() {
-            @Override
-            public void run() {
-            }
-        });
+        isBreak = true;
         return this;
     }
 
@@ -96,17 +107,20 @@ public class ThreadSwitch extends Thread {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         while (true) {
             try {
+                if (isBreak) {
+                    isBreak = false;
+                    mPoolWorkQueue.clear();
+                    Log.d("========" + getName());
+                    if (this != Holder.INSTANCE) {
+                        return;
+                    }
+                }
                 final Runnable task = mPoolWorkQueue.take();
                 if (task != null) {
                     if (task instanceof IO) {
                         task.run();
                     } else if (task instanceof Function) {
                         handler.post(task);
-                    } else if (task instanceof Break) {
-                        mPoolWorkQueue.clear();
-                        if (this != Holder.INSTANCE) {
-                            return;
-                        }
                     }
                 }
             } catch (InterruptedException e) {

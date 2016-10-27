@@ -11,14 +11,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        ThreadSwitch.get().io {
+        ThreadSwitch.singleton().io {
             Log.d("hello--io")
+            ThreadSwitch.singleton().breakTask()
         }.ui {
             Log.d("hello--ui")
         }.ui {
             Log.d("hello2--ui")
-        }.breakTask().io {
+        }.io {
             Log.d("hello2-io")
         }
     }
