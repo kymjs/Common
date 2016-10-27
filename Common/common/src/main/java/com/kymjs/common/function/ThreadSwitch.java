@@ -21,8 +21,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
 
-import com.kymjs.common.Log;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
@@ -110,7 +108,7 @@ public class ThreadSwitch extends Thread {
                 if (isBreak) {
                     isBreak = false;
                     mPoolWorkQueue.clear();
-                    Log.d("========" + getName());
+//                    Log.d("========" + getName());
                     if (this != Holder.INSTANCE) {
                         return;
                     }

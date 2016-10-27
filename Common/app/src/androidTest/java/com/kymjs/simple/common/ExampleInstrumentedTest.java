@@ -1,13 +1,12 @@
 package com.kymjs.simple.common;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.kymjs.common.Log;
+import com.kymjs.common.function.ThreadSwitch;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -18,9 +17,32 @@ import static org.junit.Assert.*;
 public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.kymjs.common", appContext.getPackageName());
+        ThreadSwitch.singleton()
+                .io(new ThreadSwitch.IO() {
+                    @Override
+                    public void run() {
+                        Log.d("NullPointerException--io");
+                        ThreadSwitch.singleton().breakTask();
+                    }
+                })
+                .ui(new ThreadSwitch.Function() {
+                    @Override
+                    public void run() {
+                        Log.d("NullPointerException--ui");
+                    }
+                })
+                .ui(new ThreadSwitch.Function() {
+                    @Override
+                    public void run() {
+                        Log.d("NullPointerException2--ui");
+                    }
+                })
+                .io(new ThreadSwitch.IO() {
+                    @Override
+                    public void run() {
+                        Log.d("NullPointerException2-io");
+                    }
+                });
     }
 }

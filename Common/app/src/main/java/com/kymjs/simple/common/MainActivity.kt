@@ -11,15 +11,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        
         ThreadSwitch.singleton().io {
-            Log.d("hello--io")
+            Log.d("NullPointerException--io")
             ThreadSwitch.singleton().breakTask()
         }.ui {
-            Log.d("hello--ui")
+            Log.d("NullPointerException--ui")
         }.ui {
-            Log.d("hello2--ui")
+            Log.d("NullPointerException2--ui")
         }.io {
-            Log.d("hello2-io")
+            Log.d("NullPointerException2-io")
         }
     }
 }
