@@ -46,17 +46,15 @@ import java.util.concurrent.LinkedTransferQueue;
  */
 public class ThreadSwitch extends Thread {
     private static final int DEFAULT_SIZE = 8;
-    volatile private boolean isBreak = false;
+    private volatile boolean isBreak = false;
 
     private final BlockingQueue<Runnable> mPoolWorkQueue;
     private static Handler handler = new Handler(Looper.getMainLooper());
 
-    private static class Holder {
-        private static final ThreadSwitch INSTANCE = new ThreadSwitch(200);
-    }
+    private static final ThreadSwitch INSTANCE = new ThreadSwitch(200);
 
     public static ThreadSwitch singleton() {
-        return Holder.INSTANCE;
+        return INSTANCE;
     }
 
     public static ThreadSwitch get() {
@@ -108,17 +106,19 @@ public class ThreadSwitch extends Thread {
                 if (isBreak) {
                     isBreak = false;
                     mPoolWorkQueue.clear();
-//                    Log.d("========" + getName());
-                    if (this != Holder.INSTANCE) {
-                        return;
-                    }
                 }
-                final Runnable task = mPoolWorkQueue.take();
-                if (task != null) {
-                    if (task instanceof IO) {
-                        task.run();
-                    } else if (task instanceof Function) {
-                        handler.post(task);
+                if (this != INSTANCE) {
+                    return;
+                }
+                //莫名其妙
+                if (mPoolWorkQueue != null) {
+                    final Runnable task = mPoolWorkQueue.take();
+                    if (task != null) {
+                        if (task instanceof IO) {
+                            task.run();
+                        } else if (task instanceof Function) {
+                            handler.post(task);
+                        }
                     }
                 }
             } catch (InterruptedException e) {
