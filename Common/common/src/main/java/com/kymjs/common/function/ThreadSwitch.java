@@ -51,10 +51,13 @@ public class ThreadSwitch extends Thread {
     private final BlockingQueue<Runnable> mPoolWorkQueue;
     private static Handler handler = new Handler(Looper.getMainLooper());
 
-    private static final ThreadSwitch INSTANCE = new ThreadSwitch(200);
+    private static class Holder {
+        private static final ThreadSwitch INSTANCE = new ThreadSwitch(200);
+    }
+
 
     public static ThreadSwitch singleton() {
-        return INSTANCE;
+        return Holder.INSTANCE;
     }
 
     public static ThreadSwitch get() {
@@ -107,7 +110,7 @@ public class ThreadSwitch extends Thread {
                     isBreak = false;
                     mPoolWorkQueue.clear();
                 }
-                if (this != INSTANCE) {
+                if (this != Holder.INSTANCE) {
                     return;
                 }
                 //莫名其妙
