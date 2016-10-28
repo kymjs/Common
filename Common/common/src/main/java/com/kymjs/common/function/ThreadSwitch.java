@@ -16,33 +16,17 @@
 
 package com.kymjs.common.function;
 
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
 
 
 /**
  * 线程切换工具类
  * Created by ZhangTao on 9/1/16.
- */
-
-
-/**
- * 只在API 21以上时才出问题, 也就是使用 LinkedTransferQueue 队列时会出问题
- * <p>
- * run方法中,如果调用了mPoolWorkQueue.clear();后马上调用mPoolWorkQueue.take();
- * 很大程度上会抛空指针异常说 mPoolWorkQueue 为空
- * <p>
- * 但是如果在clear()方法之后,随便打印一条log
- * 再调用mPoolWorkQueue.take();
- * 抛空指针异常的概率会大大下降。
- * <p>
- * 空指针不是必现的
  */
 public class ThreadSwitch extends Thread {
     private static final int DEFAULT_SIZE = 8;
@@ -70,7 +54,7 @@ public class ThreadSwitch extends Thread {
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-    public interface Function extends Runnable {
+    public interface UI extends Runnable {
     }
 
     public interface IO extends Runnable {
@@ -78,11 +62,7 @@ public class ThreadSwitch extends Thread {
 
     private ThreadSwitch(int size) {
         this.start();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mPoolWorkQueue = new LinkedTransferQueue<>();
-        } else {
-            mPoolWorkQueue = new LinkedBlockingQueue<>(size);
-        }
+        mPoolWorkQueue = new LinkedBlockingQueue<>(size);
     }
 
     public ThreadSwitch io(final IO func) {
@@ -90,7 +70,7 @@ public class ThreadSwitch extends Thread {
         return this;
     }
 
-    public ThreadSwitch ui(final Function func) {
+    public ThreadSwitch ui(final UI func) {
         mPoolWorkQueue.add(func);
         return this;
     }
@@ -109,19 +89,16 @@ public class ThreadSwitch extends Thread {
                 if (isBreak) {
                     isBreak = false;
                     mPoolWorkQueue.clear();
+                    if (this != Holder.INSTANCE) {
+                        return;
+                    }
                 }
-                if (this != Holder.INSTANCE) {
-                    return;
-                }
-                //莫名其妙
-                if (mPoolWorkQueue != null) {
-                    final Runnable task = mPoolWorkQueue.take();
-                    if (task != null) {
-                        if (task instanceof IO) {
-                            task.run();
-                        } else if (task instanceof Function) {
-                            handler.post(task);
-                        }
+                final Runnable task = mPoolWorkQueue.take();
+                if (task != null) {
+                    if (task instanceof IO) {
+                        task.run();
+                    } else if (task instanceof UI) {
+                        handler.post(task);
                     }
                 }
             } catch (InterruptedException e) {

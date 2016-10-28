@@ -26,13 +26,13 @@ public class ExampleInstrumentedTest {
                         ThreadSwitch.singleton().breakTask();
                     }
                 })
-                .ui(new ThreadSwitch.Function() {
+                .ui(new ThreadSwitch.UI() {
                     @Override
                     public void run() {
                         Log.d("NullPointerException--ui");
                     }
                 })
-                .ui(new ThreadSwitch.Function() {
+                .ui(new ThreadSwitch.UI() {
                     @Override
                     public void run() {
                         Log.d("NullPointerException2--ui");
