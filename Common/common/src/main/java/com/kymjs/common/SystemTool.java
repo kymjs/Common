@@ -21,6 +21,7 @@ import android.app.ActivityManager.MemoryInfo;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -33,6 +34,8 @@ import android.telephony.TelephonyManager;
 
 import java.io.File;
 import java.security.MessageDigest;
+
+import static com.kymjs.common.App.INSTANCE;
 
 /**
  * 系统信息工具包<br>
@@ -227,5 +230,22 @@ public final class SystemTool {
         am.getMemoryInfo(mi);
         // 返回当前系统的可用内存
         return (int) (mi.availMem / (1024 * 1024));
+    }
+
+    /**
+     * 读取application 节点 meta-data 信息
+     *
+     * @return values
+     */
+    public static String getMetaData(String key) {
+        try {
+            ApplicationInfo appInfo = INSTANCE.getPackageManager()
+                    .getApplicationInfo(INSTANCE.getPackageName(),
+                            PackageManager.GET_META_DATA);
+            return appInfo.metaData.getString(key);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

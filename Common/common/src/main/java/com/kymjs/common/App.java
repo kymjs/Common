@@ -17,6 +17,8 @@
 package com.kymjs.common;
 
 import android.app.Application;
+import android.database.Cursor;
+import android.net.Uri;
 import android.widget.Toast;
 
 /**
@@ -25,6 +27,11 @@ import android.widget.Toast;
 public class App {
 
     public static final Application INSTANCE;
+
+    public static final Uri ENV_URI = Uri.parse(String.format("content://%s/app_info", SystemTool.getMetaData("appmanager")));
+    public static final int ENV_RELEASE = 0;
+    public static final int ENV_BETA = 1;
+    public static final int ENV_ALPHA = 2;
 
     static {
         Application app = null;
@@ -42,6 +49,27 @@ public class App {
         } finally {
             INSTANCE = app;
         }
+    }
+
+    public static int getEnvCode() {
+        Cursor cursor = null;
+        int env;
+        try {
+            cursor = App.INSTANCE.getContentResolver().query(ENV_URI,
+                    new String[]{"env_code"}, "package_name=?",
+                    new String[]{App.INSTANCE.getPackageName()}, null);
+            if (cursor == null || !cursor.moveToFirst()) {
+                return ENV_RELEASE;
+            }
+
+            env = cursor.getInt(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ENV_RELEASE;
+        } finally {
+            FileUtils.closeIO(cursor);
+        }
+        return env;
     }
 
     public static void toast(String msg) {
