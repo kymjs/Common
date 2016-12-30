@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kymjs.common.function;
+package com.kymjs.arty.utils;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -93,12 +93,14 @@ public class ThreadSwitch extends Thread {
                         return;
                     }
                 }
-                final Runnable task = mPoolWorkQueue.take();
-                if (task != null) {
-                    if (task instanceof IO) {
-                        task.run();
-                    } else if (task instanceof UI) {
-                        handler.post(task);
+                if (mPoolWorkQueue != null) {
+                    final Runnable task = mPoolWorkQueue.take();
+                    if (task != null) {
+                        if (task instanceof IO) {
+                            task.run();
+                        } else if (task instanceof UI) {
+                            handler.post(task);
+                        }
                     }
                 }
             } catch (InterruptedException e) {

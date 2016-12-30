@@ -28,7 +28,7 @@ public class App {
 
     public static final Application INSTANCE;
 
-    public static final Uri ENV_URI = Uri.parse(String.format("content://%s/app_info", SystemTool.getMetaData("appmanager")));
+    public static final Uri ENV_URI;
     public static final int ENV_RELEASE = 0;
     public static final int ENV_BETA = 1;
     public static final int ENV_ALPHA = 2;
@@ -49,6 +49,7 @@ public class App {
         } finally {
             INSTANCE = app;
         }
+        ENV_URI = Uri.parse(String.format("content://%s/app_info", SystemTool.getMetaData("appmanager")));
     }
 
     public static int getEnvCode() {
