@@ -86,14 +86,14 @@ public class ThreadSwitch extends Thread {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         while (true) {
             try {
-                if (isBreak) {
-                    isBreak = false;
-                    mPoolWorkQueue.clear();
-                    if (this != Holder.INSTANCE) {
-                        return;
-                    }
-                }
                 if (mPoolWorkQueue != null) {
+                    if (isBreak) {
+                        isBreak = false;
+                        mPoolWorkQueue.clear();
+                        if (this != Holder.INSTANCE) {
+                            return;
+                        }
+                    }
                     final Runnable task = mPoolWorkQueue.take();
                     if (task != null) {
                         if (task instanceof IO) {
