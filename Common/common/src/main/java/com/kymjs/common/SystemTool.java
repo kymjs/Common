@@ -124,6 +124,13 @@ public final class SystemTool {
      * @param file
      */
     public static void installApk(Context context, File file) {
+        try {
+            Process p = Runtime.getRuntime().exec("chmod 777 " + file.getAbsolutePath());
+            p.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
         intent.addCategory("android.intent.category.DEFAULT");

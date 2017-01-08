@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kymjs.arty.utils;
+package com.kymjs.common.function;
 
 import android.os.Handler;
 import android.os.Looper;
