@@ -24,11 +24,14 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
 /**
@@ -42,6 +45,58 @@ public class FileUtils {
 
     public static File sdCard() {
         return Environment.getExternalStorageDirectory();
+    }
+
+    /**
+     * 获取文件夹对象
+     *
+     * @return 返回SD卡下的指定文件夹对象，若文件夹不存在则创建
+     */
+    public static File getSaveFolder(String folderName) {
+        File file = new File(getSDCardPath() + File.separator + folderName
+                + File.separator);
+        file.mkdirs();
+        return file;
+    }
+
+    /**
+     * 获取文件夹对象
+     *
+     * @return 返回SD卡下的指定文件夹对象，若文件夹不存在则创建
+     */
+    public static File getExternalCacheDir(String folderName) {
+        File file = new File(App.INSTANCE.getCacheDir()
+                + File.separator + folderName + File.separator);
+        file.mkdirs();
+        return file;
+    }
+
+    public static String getSDCardPath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
+    /**
+     * 输入流转byte[]
+     */
+    public static byte[] input2byte(InputStream inStream) {
+        if (inStream == null) {
+            return null;
+        }
+        byte[] in2b = null;
+        BufferedInputStream in = new BufferedInputStream(inStream);
+        ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+        int rc = 0;
+        try {
+            while ((rc = in.read()) != -1) {
+                swapStream.write(rc);
+            }
+            in2b = swapStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeIO(inStream, in, swapStream);
+        }
+        return in2b;
     }
 
     /**
