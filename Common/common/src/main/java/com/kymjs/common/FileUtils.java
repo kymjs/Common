@@ -65,8 +65,7 @@ public class FileUtils {
      * @return 返回SD卡下的指定文件夹对象，若文件夹不存在则创建
      */
     public static File getExternalCacheDir(String folderName) {
-        File file = new File(App.INSTANCE.getCacheDir()
-                + File.separator + folderName + File.separator);
+        File file = new File(ContextTrojan.getApplicationContext().getCacheDir(), folderName);
         file.mkdirs();
         return file;
     }

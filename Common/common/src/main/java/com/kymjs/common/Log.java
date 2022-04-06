@@ -15,11 +15,6 @@
  */
 package com.kymjs.common;
 
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 

@@ -10,6 +10,6 @@ public class AppContext extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        CustomActivityOnCrash.install(App.INSTANCE);
+//        CustomActivityOnCrash.install(ContextTrojan.getApplicationContext());
     }
 }

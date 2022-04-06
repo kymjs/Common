@@ -17,8 +17,8 @@
 package com.kymjs.kotlin.common.extension
 
 import android.content.Context
-import android.support.v4.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 
 /**
  * Created by ZhangTao on 7/1/16.
@@ -31,9 +31,9 @@ inline fun android.app.Fragment.dp(value: Int): Int = activity.dp(value)
 
 inline fun android.app.Fragment.sp(value: Int): Int = activity.sp(value)
 
-inline fun Fragment.dp(value: Int): Int = activity.dp(value)
+inline fun Fragment.dp(value: Int) = activity?.dp(value)
 
-inline fun Fragment.sp(value: Int): Int = activity.sp(value)
+inline fun Fragment.sp(value: Int) = activity?.sp(value)
 
 inline fun View.dp(value: Int): Int = context.dp(value)
 

@@ -25,17 +25,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.NetworkInfo.State;
 import android.net.Uri;
 import android.os.Build;
-import android.telephony.TelephonyManager;
 
-import java.io.File;
 import java.security.MessageDigest;
-
-import static com.kymjs.common.App.INSTANCE;
 
 /**
  * 系统信息工具包<br>
@@ -46,14 +39,6 @@ import static com.kymjs.common.App.INSTANCE;
  * @version 1.1
  */
 public final class SystemTool {
-    /**
-     * 获取手机IMEI码
-     */
-    public static String getPhoneIMEI(Context cxt) {
-        TelephonyManager tm = (TelephonyManager) cxt
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getDeviceId();
-    }
 
     /**
      * 获取手机系统SDK版本
@@ -85,61 +70,12 @@ public final class SystemTool {
     }
 
     /**
-     * 判断网络是否连接
-     */
-    public static boolean checkNet(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        return info != null;// 网络是否连接
-    }
-
-    /**
-     * 判断是否为wifi联网
-     */
-    public static boolean isWiFi(Context cxt) {
-        ConnectivityManager cm = (ConnectivityManager) cxt
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        // wifi的状态：ConnectivityManager.TYPE_WIFI
-        // 3G的状态：ConnectivityManager.TYPE_MOBILE
-        State state = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                .getState();
-        return State.CONNECTED == state;
-    }
-
-    /**
      * 判断手机是否处理睡眠
      */
     public static boolean isSleeping(Context context) {
         KeyguardManager kgMgr = (KeyguardManager) context
                 .getSystemService(Context.KEYGUARD_SERVICE);
-        boolean isSleeping = kgMgr.inKeyguardRestrictedInputMode();
-        return isSleeping;
-    }
-
-    /**
-     * 安装apk
-     *
-     * @param context
-     * @param file
-     */
-    public static void installApk(Context context, File file) {
-        try {
-            Process p = Runtime.getRuntime().exec("chmod 777 " + file.getAbsolutePath());
-            p.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        intent.addCategory("android.intent.category.DEFAULT");
-        intent.setType("application/vnd.android.package-archive");
-        intent.setData(Uri.fromFile(file));
-        intent.setDataAndType(Uri.fromFile(file),
-                "application/vnd.android.package-archive");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        return kgMgr.inKeyguardRestrictedInputMode();
     }
 
     /**
@@ -170,17 +106,6 @@ public final class SystemTool {
                     + "the application not found");
         }
         return version;
-    }
-
-    /**
-     * 回到home，后台运行
-     */
-    public static void goHome(Context context) {
-        Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
-        mHomeIntent.addCategory(Intent.CATEGORY_HOME);
-        mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-        context.startActivity(mHomeIntent);
     }
 
     /**
@@ -246,8 +171,8 @@ public final class SystemTool {
      */
     public static String getMetaData(String key) {
         try {
-            ApplicationInfo appInfo = INSTANCE.getPackageManager()
-                    .getApplicationInfo(INSTANCE.getPackageName(),
+            ApplicationInfo appInfo = ContextTrojan.getApplicationContext().getPackageManager()
+                    .getApplicationInfo(ContextTrojan.getApplicationContext().getPackageName(),
                             PackageManager.GET_META_DATA);
             return appInfo.metaData.getString(key);
         } catch (PackageManager.NameNotFoundException e) {

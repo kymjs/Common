@@ -22,31 +22,31 @@ import android.content.Context
 import android.content.DialogInterface
 import android.database.Cursor
 import android.graphics.drawable.Drawable
-import android.support.v4.app.Fragment
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ListAdapter
+import androidx.fragment.app.Fragment
 
 /**
  * Created by ZhangTao on 7/1/16.
  */
 
 fun Fragment.alert(
-        message: String,
-        title: String? = null,
-        init: (KAlertDialogBuilder.() -> Unit)? = null
-) = activity.alert(message, title, init)
+    message: String,
+    title: String? = null,
+    init: (KAlertDialogBuilder.() -> Unit)? = null
+) = activity?.alert(message, title, init)
 
 fun android.app.Fragment.alert(
-        message: String,
-        title: String? = null,
-        init: (KAlertDialogBuilder.() -> Unit)? = null
+    message: String,
+    title: String? = null,
+    init: (KAlertDialogBuilder.() -> Unit)? = null
 ) = activity.alert(message, title, init)
 
 fun Context.alert(
-        message: String,
-        title: String? = null,
-        init: (KAlertDialogBuilder.() -> Unit)? = null
+    message: String,
+    title: String? = null,
+    init: (KAlertDialogBuilder.() -> Unit)? = null
 ) = KAlertDialogBuilder(this).apply {
     if (title != null) title(title)
     message(message)
@@ -54,15 +54,15 @@ fun Context.alert(
 }
 
 fun Fragment.alert(
-        message: Int,
-        title: Int? = null,
-        init: (KAlertDialogBuilder.() -> Unit)? = null
-) = activity.alert(message, title, init)
+    message: Int,
+    title: Int? = null,
+    init: (KAlertDialogBuilder.() -> Unit)? = null
+) = activity?.alert(message, title, init)
 
 fun Context.alert(
-        message: Int,
-        title: Int? = null,
-        init: (KAlertDialogBuilder.() -> Unit)? = null
+    message: Int,
+    title: Int? = null,
+    init: (KAlertDialogBuilder.() -> Unit)? = null
 ) = KAlertDialogBuilder(this).apply {
     if (title != null) title(title)
     message(message)
@@ -70,63 +70,63 @@ fun Context.alert(
 }
 
 
-fun Fragment.alert(init: KAlertDialogBuilder.() -> Unit): KAlertDialogBuilder = activity.alert(init)
+fun Fragment.alert(init: KAlertDialogBuilder.() -> Unit) = activity?.alert(init)
 
 fun Context.alert(init: KAlertDialogBuilder.() -> Unit) = KAlertDialogBuilder(this).apply { init() }
 
 fun Fragment.progressDialog(
-        message: Int? = null,
-        title: Int? = null,
-        init: (ProgressDialog.() -> Unit)? = null
-) = activity.progressDialog(message, title, init)
+    message: Int? = null,
+    title: Int? = null,
+    init: (ProgressDialog.() -> Unit)? = null
+) = activity?.progressDialog(message, title, init)
 
 fun Context.progressDialog(
-        message: Int? = null,
-        title: Int? = null,
-        init: (ProgressDialog.() -> Unit)? = null
+    message: Int? = null,
+    title: Int? = null,
+    init: (ProgressDialog.() -> Unit)? = null
 ) = progressDialog(false, message?.let { getString(it) }, title?.let { getString(it) }, init)
 
 fun Fragment.indeterminateProgressDialog(
-        message: Int? = null,
-        title: Int? = null,
-        init: (ProgressDialog.() -> Unit)? = null
-) = activity.progressDialog(message, title, init)
+    message: Int? = null,
+    title: Int? = null,
+    init: (ProgressDialog.() -> Unit)? = null
+) = activity?.progressDialog(message, title, init)
 
 fun Context.indeterminateProgressDialog(
-        message: Int? = null,
-        title: Int? = null,
-        init: (ProgressDialog.() -> Unit)? = null
+    message: Int? = null,
+    title: Int? = null,
+    init: (ProgressDialog.() -> Unit)? = null
 ) = progressDialog(true, message?.let { getString(it) }, title?.let { getString(it) }, init)
 
 fun Fragment.progressDialog(
-        message: String? = null,
-        title: String? = null,
-        init: (ProgressDialog.() -> Unit)? = null
-) = activity.progressDialog(message, title, init)
+    message: String? = null,
+    title: String? = null,
+    init: (ProgressDialog.() -> Unit)? = null
+) = activity?.progressDialog(message, title, init)
 
 fun Context.progressDialog(
-        message: String? = null,
-        title: String? = null,
-        init: (ProgressDialog.() -> Unit)? = null
+    message: String? = null,
+    title: String? = null,
+    init: (ProgressDialog.() -> Unit)? = null
 ) = progressDialog(false, message, title, init)
 
 fun Fragment.indeterminateProgressDialog(
-        message: String? = null,
-        title: String? = null,
-        init: (ProgressDialog.() -> Unit)? = null
-) = activity.indeterminateProgressDialog(message, title, init)
+    message: String? = null,
+    title: String? = null,
+    init: (ProgressDialog.() -> Unit)? = null
+) = activity?.indeterminateProgressDialog(message, title, init)
 
 fun Context.indeterminateProgressDialog(
-        message: String? = null,
-        title: String? = null,
-        init: (ProgressDialog.() -> Unit)? = null
+    message: String? = null,
+    title: String? = null,
+    init: (ProgressDialog.() -> Unit)? = null
 ) = progressDialog(true, message, title, init)
 
 private fun Context.progressDialog(
-        indeterminate: Boolean,
-        message: String? = null,
-        title: String? = null,
-        init: (ProgressDialog.() -> Unit)? = null
+    indeterminate: Boolean,
+    message: String? = null,
+    title: String? = null,
+    init: (ProgressDialog.() -> Unit)? = null
 ) = ProgressDialog(this).apply {
     isIndeterminate = indeterminate
     if (!indeterminate) setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
@@ -137,15 +137,15 @@ private fun Context.progressDialog(
 }
 
 fun Fragment.selector(
-        title: CharSequence? = null,
-        items: List<CharSequence>,
-        onClick: (Int) -> Unit
-): Unit = activity.selector(title, items, onClick)
+    title: CharSequence? = null,
+    items: List<CharSequence>,
+    onClick: (Int) -> Unit
+) = activity?.selector(title, items, onClick)
 
 fun Context.selector(
-        title: CharSequence? = null,
-        items: List<CharSequence>,
-        onClick: (Int) -> Unit
+    title: CharSequence? = null,
+    items: List<CharSequence>,
+    onClick: (Int) -> Unit
 ) {
     with(KAlertDialogBuilder(this)) {
         if (title != null) title(title)

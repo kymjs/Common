@@ -1,12 +1,15 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+group = 'com.github.kymjs'
+version = "2.0.0"
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 30
         versionCode 1
         versionName version
         resourcePrefix "common_"
@@ -17,84 +20,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:support-annotations:25.0.1'
-}
-
-
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
-
-def siteUrl = REPO_URL      // 项目的主页
-def gitUrl = REPO_GIT   // Git仓库的url
-def module_name = COMMON_MODULE_NAME
-
-group = PROJECT_GROUP
-version = COMMON_MODULE_VERSION
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-                name PROJECT_DESCRIPTION
-                url siteUrl
-                // Set your license
-                licenses {
-                    license {
-                        name LICENSE_NAME
-                        url LICENSE_URL
-                    }
-                }
-                developers {
-                    developer {
-                        id DEVELOPER_ID		//填写的一些基本信息
-                        name DEVELOPER_NAME
-                        email DEVELOPER_EMAIL
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = module_name	//发布到JCenter上的项目名字
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31"
+    implementation 'androidx.appcompat:appcompat:1.3.1'
 }

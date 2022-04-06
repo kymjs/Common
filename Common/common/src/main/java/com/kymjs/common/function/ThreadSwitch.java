@@ -39,7 +39,6 @@ public class ThreadSwitch extends Thread {
         private static final ThreadSwitch INSTANCE = new ThreadSwitch(200);
     }
 
-
     public static ThreadSwitch singleton() {
         return Holder.INSTANCE;
     }

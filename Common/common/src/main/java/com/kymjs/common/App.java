@@ -31,29 +31,12 @@ import android.widget.Toast;
  */
 public class App {
 
-    public static final Application INSTANCE;
-
     public static final Uri ENV_URI;
     public static final int ENV_RELEASE = 0;
     public static final int ENV_BETA = 1;
     public static final int ENV_ALPHA = 2;
 
     static {
-        Application app = null;
-        try {
-            app = (Application) Class.forName("android.app.AppGlobals").getMethod("getInitialApplication").invoke(null);
-            if (app == null)
-                throw new IllegalStateException("Static initialization of Applications must be on main thread.");
-        } catch (final Exception e) {
-            Log.e("Failed to get current application from AppGlobals." + e.getMessage());
-            try {
-                app = (Application) Class.forName("android.app.ActivityThread").getMethod("currentApplication").invoke(null);
-            } catch (final Exception ex) {
-                Log.e("Failed to get current application from ActivityThread." + e.getMessage());
-            }
-        } finally {
-            INSTANCE = app;
-        }
         ENV_URI = Uri.parse(String.format("content://%s/app_info", SystemTool.getMetaData("appmanager")));
     }
 
@@ -61,9 +44,9 @@ public class App {
         Cursor cursor = null;
         int env;
         try {
-            cursor = App.INSTANCE.getContentResolver().query(ENV_URI,
+            cursor = ContextTrojan.getApplicationContext().getContentResolver().query(ENV_URI,
                     new String[]{"env_code"}, "package_name=?",
-                    new String[]{App.INSTANCE.getPackageName()}, null);
+                    new String[]{ContextTrojan.getApplicationContext().getPackageName()}, null);
             if (cursor == null || !cursor.moveToFirst()) {
                 return ENV_RELEASE;
             }
@@ -77,7 +60,6 @@ public class App {
         }
         return env;
     }
-
 
     private static Activity findActivityFrom(final Context context) {
         if (context instanceof Activity) return (Activity) context;
@@ -93,16 +75,16 @@ public class App {
         if (activity != null) activity.startActivity(intent);
         else context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
-    
+
     public static void toast(String msg) {
-        Toast.makeText(INSTANCE, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(ContextTrojan.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     public static void toast(int msgId) {
-        Toast.makeText(INSTANCE, msgId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(ContextTrojan.getApplicationContext(), msgId, Toast.LENGTH_SHORT).show();
     }
 
     public static void longToast(String msg) {
-        Toast.makeText(INSTANCE, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(ContextTrojan.getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
 }

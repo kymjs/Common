@@ -213,9 +213,6 @@ val Context.wallpaperManager: WallpaperManager
 val Context.wifiP2pManager: WifiP2pManager
     get() = getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
 
-val Context.wifiManager: WifiManager
-    get() = getSystemService(Context.WIFI_SERVICE) as WifiManager
-
 val Context.windowManager: WindowManager
     get() = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 

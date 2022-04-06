@@ -1,7 +1,7 @@
 package com.kymjs.simple.common
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.kymjs.common.Log
 import com.kymjs.common.function.ThreadSwitch
 
@@ -11,7 +11,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        
         ThreadSwitch.singleton().io {
             Log.d("NullPointerException--io")
             ThreadSwitch.singleton().breakTask()
