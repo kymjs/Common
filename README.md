@@ -1,15 +1,25 @@
-[![kymjs](http://http://oe3r1xqa7.bkt.clouddn.com/image/logo_s.png)](http://www.kymjs.com/works/)   
-*.apk
+[![OSL](https://kymjs.com/qiniu/image/logo3.png)](https://kymjs.com/works/)
+=================
 
-*CoreModule* 自备自用的 module
+## 使用方式  
 
+当前最新版本为：
+[![](https://jitpack.io/v/kymjs/Common.svg)](https://jitpack.io/#kymjs/Common)
 
-## 关于
-自我介绍：[kymjs张涛](http://www.kymjs.com/about)    
+```
+// root build.gradle
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 
-* QQ 群[257053751](http://jq.qq.com/?_wv=1027&k=WoM2Aa)(开发者群1)，[201055521](http://jq.qq.com/?_wv=1027&k=MBVdpK)(开发者群2)    
-* 更多我的开源项目：[开源实验室](http://www.kymjs.com/works)    
-* blog：http://www.kymjs.com/    
+// module build.gradle
+dependencies {
+    implementation 'com.github.kymjs:common:2.0.0'
+}
+```  
+
 
 
 ##开源协议
