@@ -60,21 +60,10 @@ public final class SystemTool {
     }
 
     /**
-     * 调用系统发送短信
-     */
-    public static void sendSMS(Context cxt, String smsBody) {
-        Uri smsToUri = Uri.parse("smsto:");
-        Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
-        intent.putExtra("sms_body", smsBody);
-        cxt.startActivity(intent);
-    }
-
-    /**
      * 判断手机是否处理睡眠
      */
     public static boolean isSleeping(Context context) {
-        KeyguardManager kgMgr = (KeyguardManager) context
-                .getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager kgMgr = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         return kgMgr.inKeyguardRestrictedInputMode();
     }
 
@@ -84,11 +73,9 @@ public final class SystemTool {
     public static String getAppVersionName(Context context) {
         String version = "0";
         try {
-            version = context.getPackageManager().getPackageInfo(
-                    context.getPackageName(), 0).versionName;
+            version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException(SystemTool.class.getName()
-                    + "the application not found");
+            throw new RuntimeException(SystemTool.class.getName() + "the application not found");
         }
         return version;
     }
@@ -99,11 +86,9 @@ public final class SystemTool {
     public static int getAppVersionCode(Context context) {
         int version = 0;
         try {
-            version = context.getPackageManager().getPackageInfo(
-                    context.getPackageName(), 0).versionCode;
+            version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException(SystemTool.class.getName()
-                    + "the application not found");
+            throw new RuntimeException(SystemTool.class.getName() + "the application not found");
         }
         return version;
     }
@@ -116,12 +101,10 @@ public final class SystemTool {
      */
     public static String getSign(Context context, String pkgName) {
         try {
-            PackageInfo pis = context.getPackageManager().getPackageInfo(
-                    pkgName, PackageManager.GET_SIGNATURES);
+            PackageInfo pis = context.getPackageManager().getPackageInfo(pkgName, PackageManager.GET_SIGNATURES);
             return hexdigest(pis.signatures[0].toByteArray());
         } catch (NameNotFoundException e) {
-            throw new RuntimeException(SystemTool.class.getName() + "the "
-                    + pkgName + "'s application not found");
+            throw new RuntimeException(SystemTool.class.getName() + "the " + pkgName + "'s application not found");
         }
     }
 
@@ -169,11 +152,9 @@ public final class SystemTool {
      *
      * @return values
      */
-    public static String getMetaData(String key) {
+    public static String getMetaData(Context context, String key) {
         try {
-            ApplicationInfo appInfo = ContextTrojan.getApplicationContext().getPackageManager()
-                    .getApplicationInfo(ContextTrojan.getApplicationContext().getPackageName(),
-                            PackageManager.GET_META_DATA);
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             return appInfo.metaData.getString(key);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

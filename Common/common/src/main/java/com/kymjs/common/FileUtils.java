@@ -1,22 +1,8 @@
-/*
- * Copyright (c) 2015, 张涛.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.kymjs.common;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -39,39 +25,15 @@ import java.nio.channels.FileChannel;
  */
 public class FileUtils {
 
-    public static boolean hsveSDCard() {
-        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
-    }
-
-    public static File sdCard() {
-        return Environment.getExternalStorageDirectory();
-    }
-
     /**
      * 获取文件夹对象
      *
      * @return 返回SD卡下的指定文件夹对象，若文件夹不存在则创建
      */
-    public static File getSaveFolder(String folderName) {
-        File file = new File(getSDCardPath() + File.separator + folderName
-                + File.separator);
+    public static File getExternalCacheDir(Context context, String folderName) {
+        File file = new File(context.getCacheDir(), folderName);
         file.mkdirs();
         return file;
-    }
-
-    /**
-     * 获取文件夹对象
-     *
-     * @return 返回SD卡下的指定文件夹对象，若文件夹不存在则创建
-     */
-    public static File getExternalCacheDir(String folderName) {
-        File file = new File(ContextTrojan.getApplicationContext().getCacheDir(), folderName);
-        file.mkdirs();
-        return file;
-    }
-
-    public static String getSDCardPath() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
 
     /**
@@ -125,35 +87,6 @@ public class FileUtils {
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return new File(cursor.getString(column_index));
-        }
-    }
-
-    /**
-     * 复制文件
-     *
-     * @param from
-     * @param to
-     */
-    public static void copyFile(File from, File to) {
-        if (null == from || !from.exists()) {
-            return;
-        }
-        if (null == to) {
-            return;
-        }
-        FileInputStream is = null;
-        FileOutputStream os = null;
-        try {
-            is = new FileInputStream(from);
-            if (!to.exists()) {
-                to.createNewFile();
-            }
-            os = new FileOutputStream(to);
-            copyFileFast(is, os);
-        } catch (Exception e) {
-            throw new RuntimeException(FileUtils.class.getClass().getName(), e);
-        } finally {
-            closeIO(is, os);
         }
     }
 
