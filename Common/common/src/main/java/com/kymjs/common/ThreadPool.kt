@@ -19,35 +19,22 @@ private const val MAXIMUM_POOL_SIZE = Int.MAX_VALUE
 private const val KEEP_ALIVE_SECONDS = 30L
 private const val MAX_QUEUE_SIZE = 10
 
-private const val TIMER_THREAD_NAME = "LibTimerThread"
 private const val THREAD_NAME = "LibThread"
 
-private var threadPoolExecutor = ThreadPoolExecutor(
-    CORE_POOL_SIZE,
-    MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS,
-    TimeUnit.SECONDS, LinkedBlockingDeque(MAX_QUEUE_SIZE),
-    newThreadFactory(THREAD_NAME)
-).apply {
-    allowCoreThreadTimeOut(true)
-}
-val executor: ExecutorService = BufferExecutor()
-val main = Handler(Looper.getMainLooper())
-private val TIMER_THREAD_POOL_EXECUTOR =
-    ScheduledThreadPoolExecutor(CORE_POOL_SIZE, newThreadFactory(TIMER_THREAD_NAME))
+private var executor: ExecutorService = BufferExecutor()
+private val main = Handler(Looper.getMainLooper())
 
-fun newThreadFactory(threadName: String): ThreadFactory {
-    return object : ThreadFactory {
-        private val mCount = AtomicInteger(1)
-        override fun newThread(r: Runnable): Thread {
-            return Thread(r, threadName + " #" + mCount.getAndIncrement())
-        }
-    }
+fun setThreadPoolExecutor(e: ExecutorService?) = e?.let {
+    executor = it
 }
 
-fun setThreadPoolExecutor(e: ThreadPoolExecutor?) = e?.let {
-    threadPoolExecutor = it
-}
-
+/**
+ * Executes the given command at some time in the future.  The command
+ * may execute in a new thread, in a pooled thread, or in the calling
+ * thread, at the discretion of the `Executor` implementation.
+ *
+ * @param command the runnable task
+ */
 fun execute(command: Runnable) {
     try {
         executor.execute(command)
@@ -57,57 +44,30 @@ fun execute(command: Runnable) {
     }
 }
 
-fun executeInMainThread(command: Runnable): Boolean {
+fun executeInMainThread(command: Runnable): Boolean =
     if (Thread.currentThread() == Looper.getMainLooper().thread) {
         command.run()
-        return true
+        true
     } else {
-        return main.post(command)
+        main.post(command)
     }
+
+private var threadPoolExecutor = ThreadPoolExecutor(
+    CORE_POOL_SIZE,
+    MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS,
+    TimeUnit.SECONDS, LinkedBlockingDeque(MAX_QUEUE_SIZE),
+    newThreadFactory(THREAD_NAME)
+).apply {
+    allowCoreThreadTimeOut(true)
 }
 
-fun schedule(command: Runnable?, delay: Long, unit: TimeUnit?): ScheduledFuture<*>? {
-    try {
-        return TIMER_THREAD_POOL_EXECUTOR.schedule(command, delay, unit)
-    } catch (e: Exception) {
-        //RejectedExecutionException if the task cannot be scheduled for execution
-        //NullPointerException       if command is null
-        e.printStackTrace()
+fun newThreadFactory(threadName: String): ThreadFactory {
+    return object : ThreadFactory {
+        private val mCount = AtomicInteger(1)
+        override fun newThread(r: Runnable): Thread {
+            return Thread(r, threadName + " #" + mCount.getAndIncrement())
+        }
     }
-    return null
-}
-
-fun scheduleWithFixedDelay(
-    command: Runnable?, initialDelay: Long,
-    delay: Long, unit: TimeUnit?
-): ScheduledFuture<*>? {
-    try {
-        return TIMER_THREAD_POOL_EXECUTOR.scheduleWithFixedDelay(command, initialDelay, delay, unit)
-    } catch (e: Exception) {
-        //RejectedExecutionException if the task cannot be scheduled for execution
-        //NullPointerException       if command is null
-        //IllegalArgumentException   if initDelay less than or equal to zero
-        e.printStackTrace()
-    }
-    return null
-}
-
-fun scheduleAtFixedRate(
-    command: Runnable?, initialDelay: Long,
-    period: Long, unit: TimeUnit?
-): ScheduledFuture<*>? {
-    try {
-        return TIMER_THREAD_POOL_EXECUTOR.scheduleAtFixedRate(command, initialDelay, period, unit)
-    } catch (e: Exception) {
-        //参数不合法
-        e.printStackTrace()
-    }
-    return null
-}
-
-@JvmOverloads
-fun newTimerExecutor(corePoolSize: Int, threadName: String = "Executor"): ScheduledThreadPoolExecutor {
-    return ScheduledThreadPoolExecutor(corePoolSize, newThreadFactory("$TIMER_THREAD_NAME-$threadName"))
 }
 
 private class BufferExecutor : ExecutorService, Executor {
