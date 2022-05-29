@@ -5,6 +5,10 @@
         android:allowBackup="true"
         android:supportsRtl="true">
 
+        <provider
+            android:name="com.kymjs.common.InnerTheRouterTrojan"
+            android:authorities="${applicationId}.com.kymjs.common.InnerTheRouterTrojan"
+            android:exported="false" />
     </application>
 
 </manifest>
