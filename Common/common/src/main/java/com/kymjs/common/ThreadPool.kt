@@ -21,8 +21,8 @@ private const val MAX_QUEUE_SIZE = 10
 
 private const val THREAD_NAME = "LibThread"
 
-private var executor: ExecutorService = BufferExecutor()
-private val main = Handler(Looper.getMainLooper())
+var executor: ExecutorService = BufferExecutor()
+val main = Handler(Looper.getMainLooper())
 
 fun setThreadPoolExecutor(e: ExecutorService?) = e?.let {
     executor = it
