@@ -2,7 +2,6 @@ package com.kymjs.simple.common
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.kymjs.common.Log
 import com.kymjs.common.function.ThreadSwitch
 
 class MainActivity : AppCompatActivity() {
