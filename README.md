@@ -1,4 +1,4 @@
-[![OSL](https://kymjs.com/qiniu/image/logo3.png)](https://kymjs.com/works/)
+[![OSL](https://cdn.kymjs.com:8843/qiniu/image/logo3.png)](https://kymjs.com/)
 =================
 
 ## 使用方式  
@@ -16,13 +16,13 @@ allprojects {
 
 // module build.gradle
 dependencies {
-    implementation 'com.github.kymjs:common:2.0.0'
+    implementation 'com.github.kymjs:common:2.0.7'
 }
 ```  
 
 
 
-##开源协议
+## 开源协议
 ```
  Copyright (C) 2015, 张涛
  
